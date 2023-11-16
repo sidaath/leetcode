@@ -15,15 +15,6 @@ class Solution {
             }
             count++;
         }
-
-        StringBuilder s = new StringBuilder("[");
-        for(int i =0; i < nums.length; i++){
-            s.append(nums[i]+",");
-        }
-        s.append("]");
-
-        System.out.println(s);
-        System.out.println("return == "+count);
         return count;
     }
 }
