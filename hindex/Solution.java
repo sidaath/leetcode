@@ -1,35 +1,50 @@
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.regex.Pattern;
+
 
 public class Solution{
     public static void main(String[] args) {
-        int[] ar1 = {1};
-        int[] ar2 = {1,1,1,1,1,5};
-        int[] ar3 = {5,6,7,8};
-        int[] ar4 = {0,5,1,6,3};
-        int[] ar5 = {5,5,6,7,8};
-        int[] ar6 = {1,0,4,5,2,3};
-        
-        System.out.println("************** START ****************");
-        // int res1 = hIndex(ar1);
-        // System.out.println("res1 = "+res1);
-        // System.out.println("**************************************");
-        // int res2 = hIndex(ar2);
-        // System.out.println("res2 = "+res2);
-        // System.out.println("**************************************");
-        // int res3 = hIndex(ar3);
-        // System.out.println("res3 = "+res3);
-        // System.out.println("**************************************");
-        // int res4 = hIndex(ar4);
-        // System.out.println("res4 = "+res4);
-        // System.out.println("**************************************");
-        // int res5 = hIndex(ar5);
-        // System.out.println("res5 = "+res5);
-        // System.out.println("**************************************");
-        int res6 = hIndex(ar6);
-        System.out.println("res6 = "+res6);
-        System.out.println("**************************************");
-        
+        Tests tests = new Tests();
+        Class<?> testClass = tests.getClass();
+        Field[] testClassFields = testClass.getFields();
+
+        for(int i = 0; i < testClassFields.length; i = i+2){
+            Field field = testClassFields[i];
+            field.setAccessible(true);
+
+            int[] arrayTemp = {};
+            int expResult = -2;
+            int result = -1;
+
+            if(Pattern.matches("ar[0-9]+", field.getName())){
+                try {
+                    Object fieldObject = field.get(testClass);
+                    arrayTemp = (int[])fieldObject;
+                    result = hIndex(arrayTemp);
+                } catch (Exception e) {
+                    result = -1;
+                }
+            }
+
+            field = testClassFields[i+1];
+            field.setAccessible(true);
+
+            if(Pattern.matches("expRes[0-9]+", field.getName())){
+                try {
+                    Object fieldObject = field.get(testClass);
+                    expResult = (int)fieldObject;
+                } catch (Exception e) {
+                    result = -4;
+                }
+            }
+
+            if(result != expResult){
+                System.out.println("Failed : Expected "+expResult+" Got "+result+" | "+Arrays.toString(arrayTemp));
+            }
+        }
+
     }
 
     public static int hIndex(int[] citations) {
