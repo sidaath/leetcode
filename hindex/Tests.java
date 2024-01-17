@@ -16,4 +16,14 @@ public class Tests {
 
         public static int[] ar6 = {3,3};
         public static int expRes6 = 2;
+
+        public static int[] ar7 = {4,4,0,0};
+        public static int expRes7 = 2;
+
+        public static int[] ar8 ={2,7,7,7,4};
+        public static int expRes8 = 4;
+
+        public static int[] ar9 ={1,7,9,4};
+        public static int expRes9 = 3;
+
 }
