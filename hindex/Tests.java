@@ -26,4 +26,7 @@ public class Tests {
         public static int[] ar9 ={1,7,9,4};
         public static int expRes9 = 3;
 
+        public static int[] ar10={3,0,6,1,5};
+        public static int expRes10 = 3;
+
 }

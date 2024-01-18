@@ -55,14 +55,17 @@ public class Solution{
         int booksCount = citations.length;
         HashMap <Integer, Integer> dataStore = new HashMap<>();
         HashMap <Integer, Integer> repitions = new HashMap<>();
-        int ret = 0;
+
+        int bookCitations       = -1;
+        int valueToAdd          = -1;
+        int curCitationCount    = -1;
+        int repCount            = -1;
 
         for (int i = 0; i < booksCount; i++){
-            int book          = i;
-            int bookCitations = citations[i];
+            bookCitations = citations[i];
 
             if(dataStore.containsKey(bookCitations) == false){
-                int valueToAdd = 1;
+                valueToAdd = 1;
                 for(Entry<Integer, Integer> entry : dataStore.entrySet()){
                     if(entry.getKey() < bookCitations){
                         dataStore.put(entry.getKey(), (entry.getValue()+1));
@@ -75,8 +78,8 @@ public class Solution{
                 dataStore.put(bookCitations, valueToAdd);
                 repitions.put(bookCitations, 1);
             }else{
-                int curCitationCount = dataStore.get(bookCitations);
-                int repCount         = repitions.get(bookCitations);
+                curCitationCount = dataStore.get(bookCitations);
+                repCount         = repitions.get(bookCitations);
                 for(Entry<Integer, Integer> entry : dataStore.entrySet()){
                     if(entry.getKey() == bookCitations){
                         curCitationCount++;
