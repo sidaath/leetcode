@@ -1,4 +1,5 @@
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -53,64 +54,42 @@ public class Solution{
 
     public static int hIndex(int[] citations, boolean debug) {
         int booksCount = citations.length;
-        HashMap <Integer, Integer> dataStore = new HashMap<>();
-        HashMap <Integer, Integer> repitions = new HashMap<>();
+
+        ArrayList<Integer> citationCounts = new ArrayList<>();
+
+        for (int i = 0; i < citations.length+1; i++) {
+            citationCounts.add(i, 0);
+        }
+        for (int i = 0; i < citations.length+1; i++) {
+            if (debug) System.out.println("val = "+citationCounts.get(i));
+        }
 
         int bookCitations       = -1;
         int valueToAdd          = -1;
-        int curCitationCount    = -1;
-        int repCount            = -1;
 
         for (int i = 0; i < booksCount; i++){
             bookCitations = citations[i];
+            if(debug) System.out.println("bookCitations = "+bookCitations);
 
-            if(dataStore.containsKey(bookCitations) == false){
-                valueToAdd = 1;
-                for(Entry<Integer, Integer> entry : dataStore.entrySet()){
-                    if(entry.getKey() < bookCitations){
-                        dataStore.put(entry.getKey(), (entry.getValue()+1));
-                    }
-
-                    if(entry.getKey() > bookCitations){
-                        valueToAdd = valueToAdd + repitions.get(entry.getKey());
-                    }
-                }
-                dataStore.put(bookCitations, valueToAdd);
-                repitions.put(bookCitations, 1);
+            if(bookCitations >= booksCount){
+                if(debug) System.out.println("   in GREATER THAN");
+                valueToAdd = citationCounts.get(booksCount) + 1;
+                if(debug) System.out.println("   adding "+valueToAdd+"to "+booksCount);
+                citationCounts.add(booksCount, valueToAdd);
             }else{
-                curCitationCount = dataStore.get(bookCitations);
-                repCount         = repitions.get(bookCitations);
-                for(Entry<Integer, Integer> entry : dataStore.entrySet()){
-                    if(entry.getKey() == bookCitations){
-                        curCitationCount++;
-                    }
-                    if(entry.getKey() < bookCitations){
-                        dataStore.put(entry.getKey(), entry.getValue()+1);
-                    }
-                }
-                dataStore.put(bookCitations, curCitationCount);
-                repitions.put(bookCitations, repCount+1);
+                if(debug) System.out.println("   in LESS THAN");
+                valueToAdd = citationCounts.get(bookCitations) + 1;
+                if(debug) System.out.println("   adding "+valueToAdd+" to "+bookCitations);
+                citationCounts.add(bookCitations, valueToAdd);
+                if(debug) System.out.println("   citations["+bookCitations+"] = "+citationCounts.get(bookCitations));
             }
         }
+        if(debug) System.out.println("**********************8");
 
-        int max = 0;
-        for(Entry<Integer, Integer> entry : dataStore.entrySet()){
-            if(debug) System.out.println("K - "+entry.getKey()+" | V - "+entry.getValue());
-            if(entry.getKey() > max){
-                if(entry.getKey() <= entry.getValue()){
-                    max = entry.getKey();
-                }else if(entry.getValue() >= booksCount){
-                    max = booksCount;
-                }else if(entry.getValue() > max){
-                    max = entry.getValue();
-                }
-            }
+        for (int i = 0; i < citations.length+1; i++) {
+            if(debug) System.out.println("val"+i+" = "+citationCounts.get(i));
         }
         
-        if(max >= booksCount){
-            return booksCount;
-        }else{
-            return max;
-        }
+        return 0;
     }
 }
