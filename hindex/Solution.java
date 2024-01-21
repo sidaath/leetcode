@@ -50,27 +50,37 @@ public class Solution{
     }
 
     public static int hIndex(int[] citations, boolean debug) {
-        int booksCount = citations.length;
-        int[] citationCounts = new int[booksCount + 1];
-        int offset          = booksCount;
+        int booksCount          = citations.length;
+        int[] citationCounts    = new int[booksCount + 1];
+        int offsetPosition      = booksCount;
 
-        int thisCitation = 0;
+        int currentCitation = 0;
         for(int i = 0; i < booksCount; i++){
-            thisCitation = citations[i];
+            //for every citation in array, increment by 1 its position in new array
+            //index of new array = value of citations in citations array
+            //if citation value is higher number of books, then increment offset value by 1
+            currentCitation = citations[i];
 
-            if(thisCitation >= booksCount){
-                if(debug) System.out.println(thisCitation+" >= "+booksCount+", increment citationCounts["+(offset)+"] to "+(citationCounts[offset] + 1));
-                citationCounts[offset] = citationCounts[offset] + 1;
+            if(currentCitation >= booksCount){
+                if(debug) System.out.println(currentCitation+" >= "+booksCount+", increment citationCounts["+(offsetPosition)+"] to "+(citationCounts[offsetPosition] + 1));
+                citationCounts[offsetPosition] = citationCounts[offsetPosition] + 1;
             }else{
-                if(debug) System.out.println(thisCitation+" < "+booksCount+", increment citationCounts["+(thisCitation)+"] to "+(citationCounts[thisCitation] + 1));
-                citationCounts[thisCitation] = citationCounts[thisCitation] + 1;
+                if(debug) System.out.println(currentCitation+" < "+booksCount+", increment citationCounts["+(currentCitation)+"] to "+(citationCounts[currentCitation] + 1));
+                citationCounts[currentCitation] = citationCounts[currentCitation] + 1;
             }
         }
 
         int citationSum = 0;
         if(debug) System.out.println("Start : citationSum = "+citationSum);
-        for (int i = offset; i >= 0; i--) {
+
+
+        //every value in new array should be increased by the sum of all values to its right
+        //so start from left, and work towards right - adding current value to the value to its left
+        //index i is citations, value at index i is how many books have that many citations
+        //if sum >= index, then (sum) books have at least (index) citations, so return index
+        for (int i = offsetPosition; i >= 0; i--) {
             if(debug) System.out.println("   i = "+i+" | citationCounts"+i+" = "+citationCounts[i]);
+            
             citationSum = citationSum + citationCounts[i];
             if(debug) System.out.println("   new sum = "+citationSum);
             
