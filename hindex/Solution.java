@@ -1,5 +1,4 @@
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -52,42 +51,33 @@ public class Solution{
 
     public static int hIndex(int[] citations, boolean debug) {
         int booksCount = citations.length;
+        int[] citationCounts = new int[booksCount + 1];
+        int offset          = booksCount;
 
-        ArrayList<Integer> citationCounts = new ArrayList<>();
+        int thisCitation = 0;
+        for(int i = 0; i < booksCount; i++){
+            thisCitation = citations[i];
 
-        for (int i = 0; i < citations.length+1; i++) {
-            citationCounts.add(i, 0);
-        }
-        for (int i = 0; i < citations.length+1; i++) {
-            if (debug) System.out.println("val = "+citationCounts.get(i));
-        }
-
-        int bookCitations       = -1;
-        int valueToAdd          = -1;
-
-        for (int i = 0; i < booksCount; i++){
-            bookCitations = citations[i];
-            if(debug) System.out.println("bookCitations = "+bookCitations);
-
-            if(bookCitations >= booksCount){
-                if(debug) System.out.println("   in GREATER THAN");
-                valueToAdd = citationCounts.get(booksCount) + 1;
-                if(debug) System.out.println("   adding "+valueToAdd+"to "+booksCount);
-                citationCounts.add(booksCount, valueToAdd);
+            if(thisCitation >= booksCount){
+                if(debug) System.out.println(thisCitation+" >= "+booksCount+", increment citationCounts["+(offset)+"] to "+(citationCounts[offset] + 1));
+                citationCounts[offset] = citationCounts[offset] + 1;
             }else{
-                if(debug) System.out.println("   in LESS THAN");
-                valueToAdd = citationCounts.get(bookCitations) + 1;
-                if(debug) System.out.println("   adding "+valueToAdd+" to "+bookCitations);
-                citationCounts.add(bookCitations, valueToAdd);
-                if(debug) System.out.println("   citations["+bookCitations+"] = "+citationCounts.get(bookCitations));
+                if(debug) System.out.println(thisCitation+" < "+booksCount+", increment citationCounts["+(thisCitation)+"] to "+(citationCounts[thisCitation] + 1));
+                citationCounts[thisCitation] = citationCounts[thisCitation] + 1;
             }
         }
-        if(debug) System.out.println("**********************8");
 
-        for (int i = 0; i < citations.length+1; i++) {
-            if(debug) System.out.println("val"+i+" = "+citationCounts.get(i));
+        int citationSum = 0;
+        if(debug) System.out.println("Start : citationSum = "+citationSum);
+        for (int i = offset; i >= 0; i--) {
+            if(debug) System.out.println("   i = "+i+" | citationCounts"+i+" = "+citationCounts[i]);
+            citationSum = citationSum + citationCounts[i];
+            if(debug) System.out.println("   new sum = "+citationSum);
+            
+            if(citationSum >= i){
+                return i;
+            }
         }
-        
         return 0;
     }
 }
